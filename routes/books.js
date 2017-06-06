@@ -64,7 +64,6 @@ router.delete('/books/:id', function(req, res, next) {
   .returning('*')
   .then(response => {
     delete response[0].id;
-
     response = humps.camelizeKeys(response);
     res.send(response[0]);
   })
