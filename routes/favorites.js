@@ -16,25 +16,34 @@ var jwt_key = process.env.JWT_KEY;
 
 router.use(cookieParser());
 
-router.get('/favorites', function(req, res, next){
-  var body = req.body;
+router.use('/favorites', function(req, res, next){
   var token = req.cookies.token;
-  if (token) {
+  if(token){
     jwt.verify(token, 'dogface', function(err, decoded){
-      if (err) {
-        res.setHeader('content-type', 'text/plain');
-        res.status(401).send('Unauthorized');
+      if (decoded) {
+        next();
       }
-      else{
-        knex.from('favorites')
-        .innerJoin('books', 'book_id', 'books.id')
-        .then(function(data){
-          data = humps.camelizeKeys(data);
-          res.send(data);
-        });
+      else {
+        res.setHeader('content-type', 'text/plain');
+        res.sendStatus(401);
       }
     });
   }
+  else {
+    res.setHeader('content-type', 'text/plain');
+    res.sendStatus(401);
+  }
+});
+
+
+router.get('/favorites', function(req, res, next){
+  var body = req.body;
+  knex.from('favorites')
+  .innerJoin('books', 'book_id', 'books.id')
+  .then(function(data){
+    data = humps.camelizeKeys(data);
+    res.send(data);
+  });
 });
 
 router.get('/favorites/check', function(req, res, next){
