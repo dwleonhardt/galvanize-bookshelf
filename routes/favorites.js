@@ -19,7 +19,7 @@ router.use(cookieParser());
 router.use('/favorites', function(req, res, next){
   var token = req.cookies.token;
   if(token){
-    jwt.verify(token, 'dogface', function(err, decoded){
+    jwt.verify(token, jwt_key, function(err, decoded){
       if (decoded) {
         next();
       }
@@ -51,7 +51,7 @@ router.get('/favorites/check', function(req, res, next){
   var body = req.body;
   var token = req.cookies.token;
   if (token) {
-    jwt.verify(token, 'dogface', function(err, decoded){
+    jwt.verify(token, jwt_key, function(err, decoded){
       if (err) {
         res.setHeader('content-type', 'text/plain');
         res.status(401).send('Unauthorized');
@@ -78,7 +78,7 @@ router.post('/favorites', function(req, res, next){
   var token = req.cookies.token;
 
   if (token) {
-    jwt.verify(token, 'dogface', function(err, decoded){
+    jwt.verify(token, jwt_key, function(err, decoded){
       if (err) {
         res.setHeader('content-type', 'text/plain');
         res.status(401).send('Unauthorized');
@@ -108,7 +108,7 @@ router.delete('/favorites', function(req, res, next){
   var token = req.cookies.token;
 
   if (token) {
-    jwt.verify(token, 'dogface', function(err, decoded){
+    jwt.verify(token, jwt_key, function(err, decoded){
       if (err) {
         res.setHeader('content-type', 'text/plain');
         res.status(401).send('Unauthorized');
